@@ -7,7 +7,7 @@ from typing import List
 from pathlib import Path
 
 
-def export_html_wasm(notebook_path: str, output_dir: str, as_app: bool = False) -> bool:
+def export_html_wasm(notebook_path: str, output_dir: str) -> bool:
     """Export a single marimo notebook to HTML format.
 
     Returns:
@@ -15,13 +15,8 @@ def export_html_wasm(notebook_path: str, output_dir: str, as_app: bool = False) 
     """
     output_path = notebook_path.replace(".py", ".html")
 
-    cmd = ["marimo", "export", "html-wasm"]
-    if as_app:
-        print(f"Exporting {notebook_path} to {output_path} as app")
-        cmd.extend(["--mode", "run", "--no-show-code"])
-    else:
-        print(f"Exporting {notebook_path} to {output_path} as notebook")
-        cmd.extend(["--mode", "edit"])
+    cmd = ["marimo", "export", "html-wasm", "--mode", "run", "--no-show-code"]
+    print(f"Exporting {notebook_path} to {output_path}")
 
     try:
         output_file = os.path.join(output_dir, output_path)
@@ -107,7 +102,7 @@ def main() -> None:
 
     # Export notebooks sequentially
     for nb in all_notebooks:
-        export_html_wasm(nb, args.output_dir, as_app=nb.startswith("apps/"))
+        export_html_wasm(nb, args.output_dir)
 
     # Generate index only if all exports succeeded
     generate_index(all_notebooks, args.output_dir)
